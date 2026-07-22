@@ -1,0 +1,6 @@
+{
+  "name": "DietCare Manager",
+  "description": "Sistem Manajemen Diet Pasien Rumah Sakit - Pengelolaan Kebutuhan Diet, Kamar, Diagnosa, Distribusi Makanan & Laporan",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
