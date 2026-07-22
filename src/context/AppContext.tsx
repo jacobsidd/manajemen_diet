@@ -74,7 +74,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { console.error(e); }
     }
-    return initialUsers[0]; // Default logged in as Admin for easy testing
+    return null; // Default to null so user sees Login page on initial open
   });
 
   const [users, setUsers] = useState<User[]>(() => {
@@ -161,20 +161,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Auth Methods
   const login = (username: string, password?: string) => {
-    const user = users.find(u => u.username.toLowerCase() === username.toLowerCase().trim());
+    const cleanUsername = username.toLowerCase().trim();
+    const user = users.find(u => u.username.toLowerCase() === cleanUsername);
     if (!user) {
-      return { success: false, message: 'Username tidak ditemukan.' };
+      return { success: false, message: 'Username tidak terdaftar dalam sistem.' };
     }
     if (user.status !== 'Aktif') {
-      return { success: false, message: 'Akun Anda tidak aktif. Silakan hubungi Administrator.' };
+      return { success: false, message: 'Akun Anda dalam status Nonaktif. Silakan hubungi Administrator.' };
     }
-    // Password check if password is defined on user account
-    if (user.password && password && user.password !== password) {
+    
+    const inputPass = password || '';
+    const expectedPass = user.password || '123456';
+
+    if (inputPass !== expectedPass) {
       return { success: false, message: 'Password yang Anda masukkan salah.' };
     }
-    if (password && password.length < 4) {
-      return { success: false, message: 'Password minimal 4 karakter.' };
-    }
+
     setCurrentUser(user);
     addLog('User Login', `User ${user.name} (${user.role}) berhasil masuk ke sistem.`);
     return { success: true, message: 'Login berhasil.' };
